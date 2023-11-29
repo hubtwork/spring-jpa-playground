@@ -1,0 +1,15 @@
+spring.application.name: jpa-playground-api
+spring.profiles.active: local
+
+spring:
+  config:
+    import:
+      - db-core.yml
+  mvc:
+    throw-exception-if-no-handler-found: true
+  web:
+    resources:
+      add-mappings: false
+
+---
+spring.config.activate.on-profile: local

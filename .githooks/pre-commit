@@ -1,0 +1,26 @@
+#!/bin/sh
+readonly REQUIRED_KTLINT_VERSION=1.0.1
+readonly KTLINT_INSTALL_GUIDE_LINK=https://pinterest.github.io/ktlint/$REQUIRED_KTLINT_VERSION/install/cli/#package-managers
+
+# check ktlint installation
+if ! [ -x "$(command -v ktlint)" ]; then
+  printf 'ktlint is not installed !!\n\nPlease check below links and install ktlint.\n%s\n' $KTLINT_INSTALL_GUIDE_LINK
+  exit 1
+fi
+
+# check ktlint version
+local_ktlint_version="$(printf '%s\n' "$REQUIRED_KTLINT_VERSION" "$(ktlint --version)" | sort -V | head -n1)"
+if [ "$local_ktlint_version" != "$REQUIRED_KTLINT_VERSION" ]; then
+  printf 'ktlint version update needed!\n\nRequired: %s\nCurrent: %s\n' "$REQUIRED_KTLINT_VERSION" "$local_ktlint_version"
+  printf 'please upgrade version over required. (ex: brew upgrade ktlint)\n'
+  exit 1
+fi
+
+# execute ktlint
+if ! git diff --name-only --cached --relative \
+  | grep --color=never '\.kt[s"]\?$' \
+  | xargs ktlint --relative; then
+    printf '\nktlint check failed.\nPlease check your code before commit!\n'
+  exit 1
+fi
+
