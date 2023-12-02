@@ -9,7 +9,7 @@ import team.hlab.jpa.SpringJpaTest
 class EntityManagerTest(
     private val entityManagerFactory: EntityManagerFactory,
 ) {
-    @DisplayName("create EntityManager from Factory")
+    @DisplayName("create EntityManager and Transaction from Factory")
     @Test
     fun t1() {
         val em = entityManagerFactory.createEntityManager()
