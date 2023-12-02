@@ -1,6 +1,7 @@
 package team.hlab.jpa.entitymanager
 
 import jakarta.persistence.EntityManagerFactory
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import team.hlab.jpa.SpringJpaTest
 
@@ -8,8 +9,9 @@ import team.hlab.jpa.SpringJpaTest
 class EntityManagerTest(
     private val entityManagerFactory: EntityManagerFactory,
 ) {
+    @DisplayName("create EntityManager from Factory")
     @Test
-    fun create_entityManager_from_factory() {
+    fun t1() {
         val em = entityManagerFactory.createEntityManager()
         val tx = em.transaction
         try {
