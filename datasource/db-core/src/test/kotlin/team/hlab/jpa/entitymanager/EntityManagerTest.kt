@@ -54,4 +54,22 @@ class EntityManagerTest(
         assertThat(findMember).isNotNull
         assertThat(findMember.id).isEqualTo(id)
     }
+
+    @DisplayName("when entity's data changed, update query need to be sent")
+    @Test
+    fun t4() {
+        val id = UUID.randomUUID().toString()
+
+        val em = entityManagerFactory.createEntityManager()
+        val member = MemberEntity(id = id, username = "alen", age = 1, address = "hlab")
+        em.transactional {
+            em.persist(member)
+            member.growUp(year = 1)
+        }
+
+        val em2 = entityManagerFactory.createEntityManager()
+        val findMember = em2.find(MemberEntity::class.java, id)
+        assertThat(findMember).isNotNull
+        assertThat(findMember.age).isEqualTo(2)
+    }
 }
