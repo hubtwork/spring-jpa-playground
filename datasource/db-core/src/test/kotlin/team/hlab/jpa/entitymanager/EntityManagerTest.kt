@@ -64,6 +64,7 @@ class EntityManagerTest(
         val member = MemberEntity(id = id, username = "alen", age = 1, address = "hlab")
         em.transactional {
             em.persist(member)
+            member.rename("arc")
             member.growUp(year = 1)
         }
 

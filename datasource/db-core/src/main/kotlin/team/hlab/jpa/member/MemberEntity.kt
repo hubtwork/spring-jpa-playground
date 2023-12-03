@@ -13,15 +13,22 @@ class MemberEntity(
     @Id
     @Column(name = "ID")
     val id: String,
-    @Column(name = "NAME")
-    val username: String,
+    username: String,
     age: Int,
     @Column(name = "ADDRESS")
     val address: String,
 ) {
+    @Column(name = "NAME")
+    var username: String = username
+        protected set
+
     @Column(name = "AGE")
     var age: Int = age
         protected set
+
+    fun rename(name: String) {
+        username = name
+    }
 
     fun growUp(year: Int) {
         age += year
