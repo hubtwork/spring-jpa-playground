@@ -6,5 +6,7 @@ plugins {
 dependencies {
     compileOnly(project(":domain"))
 
-    implementation(libs.db.h2)
+    runtimeOnly(libs.db.h2)
+
+    implementation(project(":support:logging"))
 }
