@@ -37,4 +37,21 @@ class EntityManagerTest(
         val nullMember = em2.find(MemberEntity::class.java, id)
         assertThat(nullMember).isNull()
     }
+
+    @DisplayName("when call persist, entityManager will save entity")
+    @Test
+    fun t3() {
+        val id = UUID.randomUUID().toString()
+
+        val em = entityManagerFactory.createEntityManager()
+        em.transactional {
+            val member = MemberEntity(id = id, username = "alen", age = 1, address = "hlab")
+            em.persist(member)
+        }
+
+        val em2 = entityManagerFactory.createEntityManager()
+        val findMember = em2.find(MemberEntity::class.java, id)
+        assertThat(findMember).isNotNull
+        assertThat(findMember.id).isEqualTo(id)
+    }
 }
