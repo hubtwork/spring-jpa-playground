@@ -124,4 +124,26 @@ class EntityManagerTest(
             assertThat(nullMember).isNull()
         }
     }
+
+    @DisplayName("when merge function called, EntityManager will execute \"save or update\" on given entity")
+    @Test
+    fun t7() {
+        val id = UUID.randomUUID().toString()
+        val member = MemberEntity(id = id, username = "alen", age = 1, address = "hlab")
+
+        val em = entityManagerFactory.createEntityManager()
+        em.transactional {
+            em.persist(member)
+        }
+        // member is currently detached ( EM1 is closed )
+        member.growUp(9)
+        assertThat(member.id).isEqualTo(id)
+
+        val em2 = entityManagerFactory.createEntityManager()
+        em2.transactional {
+            // load from DB and create snapshot on EM2's Persistence Context
+            em2.merge(member)
+            // but snapshot's age would be 1, so update query would be sent
+        }
+    }
 }
