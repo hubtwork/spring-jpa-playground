@@ -73,4 +73,37 @@ class EntityManagerTest(
         assertThat(findMember).isNotNull
         assertThat(findMember.age).isEqualTo(2)
     }
+
+    @DisplayName("with jpql, get multiple result from db")
+    @Test
+    fun t5() {
+        fun <T> List<T>.contentEquals(other: List<T>) = this.size == other.size && this.toSet() == other.toSet()
+
+        val getQuery = "select m from MemberEntity m"
+        val ids = (0..10).map { UUID.randomUUID().toString() }
+
+        val em = entityManagerFactory.createEntityManager()
+        // do not open transaction longer like this in production codes.
+        em.transactional {
+            ids.forEachIndexed { idx, id ->
+                val member = MemberEntity(id = id, username = "user#$idx", age = idx, address = "address")
+                em.persist(member)
+            }
+            // query would be sent to DB for checking all MemberEntity ( Not use 1st cache )
+            val members = em.createQuery(getQuery, MemberEntity::class.java).resultList
+            assertThat(members.size).isEqualTo(ids.size)
+            assertThat(members.contentEquals(ids)).isTrue()
+        }
+
+        val em2 = entityManagerFactory.createEntityManager()
+        em2.transactional {
+            // query would be sent to DB for checking all MemberEntity ( Not use 1st cache )
+            val members = em2.createQuery(getQuery, MemberEntity::class.java).resultList
+            assertThat(members.size).isEqualTo(ids.size)
+            assertThat(members.contentEquals(ids)).isTrue()
+            // query would not be sent because save entities on persistence context at previous jpql's result
+            val member = em2.find(MemberEntity::class.java, ids[0])
+            assertThat(member).isNotNull
+        }
+    }
 }
