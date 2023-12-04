@@ -106,4 +106,22 @@ class EntityManagerTest(
             assertThat(member).isNotNull
         }
     }
+
+    @DisplayName("when entity detached from context, any persistence-context's functions would not be supported")
+    @Test
+    fun t6() {
+        val id = UUID.randomUUID().toString()
+
+        val em = entityManagerFactory.createEntityManager()
+        val member = MemberEntity(id = id, username = "alen", age = 1, address = "hlab")
+        em.transactional {
+            em.persist(member)
+            // detach -> insert query on lazy-query-storage and 1st-cache will be removed
+            em.detach(member)
+            val nullMember = em.find(MemberEntity::class.java, id)
+            // -> will send query to DB (flush) to find member with "id"
+            // (because context don't know about MemberEntity with given ID)
+            assertThat(nullMember).isNull()
+        }
+    }
 }
