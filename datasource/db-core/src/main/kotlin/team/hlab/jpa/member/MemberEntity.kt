@@ -18,7 +18,7 @@ class MemberEntity(
     @Column(name = "ADDRESS")
     val address: String,
 ) {
-    @Column(name = "NAME")
+    @Column(name = "NAME", nullable = false, length = 10)
     var username: String = username
         protected set
 
