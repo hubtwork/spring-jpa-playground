@@ -22,7 +22,7 @@ class MemberEntity(
     var username: String = username
         protected set
 
-    @Column(name = "AGE")
+    @Column(name = "AGE", nullable = false)
     var age: Int = age
         protected set
 

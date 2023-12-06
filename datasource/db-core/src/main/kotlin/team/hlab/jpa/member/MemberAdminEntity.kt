@@ -15,9 +15,9 @@ class MemberAdminEntity(
     @Id
     @Column(name = "ID")
     val id: String,
-    @Column(name = "NAME")
+    @Column(name = "NAME", nullable = false, length = 10)
     val username: String,
-    @Column(name = "AGE")
+    @Column(name = "AGE", nullable = false)
     val age: Int,
     @Column(name = "ADDRESS")
     val address: String,
