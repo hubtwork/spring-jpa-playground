@@ -15,7 +15,7 @@ class PlayerEntity(
     team: TeamEntity,
 ) {
     @ManyToOne
-    @JoinColumn(name = "TEAM_ID")
+    @JoinColumn(name = "TEAM_ID", nullable = false)
     var team: TeamEntity = team
         protected set
 
